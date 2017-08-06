@@ -1,0 +1,25 @@
+<p>
+    <a href="{% url 'myupload:index' %}">Home</a>
+</p>
+
+{% if latest_files %}
+<table>
+    <tr>
+	<th>File Name</th>
+	<th>Upload Date</th>
+	<th>Comment</th>
+    </tr>
+    
+    {% for f in latest_files %}
+    <tr>
+	<td><a href="{% url 'myupload:detail' f.id %}">{{ f.file_name }}</td>
+	<td>{{ f.upload_datetime }}</td>
+	<td>{{ f.comment }}</td>
+    </tr>
+    {% endfor %}
+	
+</table>
+    
+{% else %}
+<p>No files are available.</p>
+{% endif %}
