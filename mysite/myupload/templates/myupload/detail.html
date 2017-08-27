@@ -1,18 +1,32 @@
-<p>
-    <a href="{% url 'myupload:index' %}">Home</a>
-    <a href="{% url 'myupload:list' %}">List</a>
-</p>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Django File Upload</title>
+    </head>
 
-{% if file %}
-<ul>
-    <li>{{ file.id }}</li>
-    <li>{{ file.file_name }}</li>
-    <li>{{ file.comment }}</li>
-    <li>{{ file.upload_datetime }}</li>
-    
-</ul>
+    <body>
 
-{% else %}
-<p>No polls are available.</p>
-{% endif %}
+	<p>
+	    <a href="{% url 'myupload:index' %}">Home</a>
+	    <a href="{% url 'myupload:list' %}">List</a>
+	    <a href="{% url 'myupload:upload_file' %}">Upload File</a>
+	</p>
+
+	{% if file %}
+	<ul>
+	    <li>{{ file.id }}</li>
+	    <li>{{ file.file_name }}</li>
+	    <li>{{ file.comment }}</li>
+	    <li>{{ file.upload_datetime }}</li>
+	    
+	</ul>
+	{% else %}
+	
+	<p>No polls are available.</p>
+	{% endif %}
+
+    </body>
+
+</html>
 

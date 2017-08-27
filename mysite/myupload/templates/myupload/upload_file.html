@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Django File Upload</title>
+    </head>
+
+    <body>
+
+	<p>
+	    <a href="{% url 'myupload:index' %}">Home</a>
+	    <a href="{% url 'myupload:list' %}">List</a>
+	</p>
+
+        <!-- Upload form. Note enctype attribute! -->
+        <form action="{% url 'myupload:upload_file' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+	    {% if form.non_field_errors %}
+            <p>{{ form.non_field_errors }}</p>
+	    {% endif %}
+
+            <p>{{ form.file.label_tag }} {{ form.file.help_text }}</p>
+	    <p>Upload Date Time: <input type="text" name="upload_datetime" /></p>
+	    <p>Comment: <input type="text" name="comment" /></p>
+            <!-- <p>{{ form.upload_datetime.label_tag }} {{ form.upload_datetime.help_text }}</p>
+		 <p>{{ form.comment.label_tag }} {{ form.comment.help_text }}</p> -->
+
+            <p>
+                {{ form.file.errors }}
+                {{ form.file }}
+            </p>
+
+            <p><input type="submit" value="Upload"/></p>
+        </form>
+    </body>
+
+</html>

@@ -6,6 +6,9 @@ from django.http import HttpResponse, Http404
 from django.template import loader
 from .models import file
 
+# based on https://docs.djangoproject.com/en/1.11/topics/http/file-uploads/
+from .forms import UploadFileForm
+
 def index(req):
     # return HttpResponse('Hi, this is the upload page to be built.')
     template = loader.get_template('myupload/index.html')
@@ -56,3 +59,35 @@ def test(req, something):
     response = 'I got {} passed by GET request!'
     return HttpResponse(response.format(something))
 
+
+def upload_file(req):
+
+    # template = loader.get_template('myupload/upload_file.html')
+
+    if req.method=='POST':
+        form = UploadFileForm(req.POST, req.FILES)
+        # so, looks like I just pass FILES object to the class form.
+        # Looks like I'm creating a form populating user input...
+        if form.is_valid():
+            # response = 'I got {} passed by file upload!'
+            # return HttpResponse(response.format(req.FILES['file'].name))
+            new_file = file.objects.create(
+                file_name       = req.FILES['file'].name,
+                upload_datetime = req.POST['upload_datetime'],
+                comment         = req.POST['comment'],
+            )
+        else:
+            return HttpResponse(req.FILES['file'].name)
+            pass
+
+    else:
+        # if this is not a POST method, just show empty form
+        # .... is my understanding
+        form = UploadFileForm()
+
+        context = {'form': form}
+
+        # so I have to pass this form to 'upload_file.html'
+        # return HttpResponse(template.render(context, req))
+        # return render(req, template, context)
+        return render(req, 'myupload/upload_file.html', context)
