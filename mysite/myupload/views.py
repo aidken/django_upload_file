@@ -6,14 +6,22 @@ from django.http import HttpResponse, Http404
 from django.template import loader
 from .models import file
 
-
-
 def index(req):
     # return HttpResponse('Hi, this is the upload page to be built.')
     template = loader.get_template('myupload/index.html')
+
+    if req.method=='POST':
+        # add new file (a new record in table myupload_file)
+        # https://docs.djangoproject.com/en/dev/ref/models/querysets/#django.db.models.query.QuerySet.create
+        new_file = file.objects.create(
+            file_name       = req.POST['file_name'],
+            upload_datetime = req.POST['upload_datetime'],
+            comment         = req.POST['comment'],
+        )
+
     number_of_files = len(file.objects.all())
     context = {
-        'number_of_files': number_of_files
+        'number_of_files': number_of_files,
     }
     return HttpResponse(template.render(context, req))
 
