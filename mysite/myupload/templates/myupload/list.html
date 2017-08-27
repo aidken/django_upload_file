@@ -1,25 +1,40 @@
-<p>
-    <a href="{% url 'myupload:index' %}">Home</a>
-</p>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Django File Upload</title>
+    </head>
 
-{% if latest_files %}
-<table>
-    <tr>
-	<th>File Name</th>
-	<th>Upload Date</th>
-	<th>Comment</th>
-    </tr>
-    
-    {% for f in latest_files %}
-    <tr>
-	<td><a href="{% url 'myupload:detail' f.id %}">{{ f.file_name }}</td>
-	<td>{{ f.upload_datetime }}</td>
-	<td>{{ f.comment }}</td>
-    </tr>
-    {% endfor %}
-	
-</table>
-    
-{% else %}
-<p>No files are available.</p>
-{% endif %}
+    <body>
+
+	<p>
+	    <a href="{% url 'myupload:index' %}">Home</a>
+	    <a href="{% url 'myupload:upload_file' %}">Upload File</a>
+	</p>
+
+	{% if latest_files %}
+	<table>
+	    <tr>
+		<th>File Name</th>
+		<th>Upload Date</th>
+		<th>Comment</th>
+	    </tr>
+	    
+	    {% for f in latest_files %}
+	    <tr>
+		<td><a href="{% url 'myupload:detail' f.id %}">{{ f.file_name }}</a></td>
+		<td>{{ f.upload_datetime }}</td>
+		<td>{{ f.comment }}</td>
+	    </tr>
+	    {% endfor %}
+	    
+	</table>
+	{% else %}
+
+	<p>No files are available.</p>
+	{% endif %}
+
+    </body>
+
+</html>
+
