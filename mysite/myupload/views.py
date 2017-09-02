@@ -69,16 +69,20 @@ def upload_file(req):
         # so, looks like I just pass FILES object to the class form.
         # Looks like I'm creating a form populating user input...
         if form.is_valid():
-            # response = 'I got {} passed by file upload!'
-            # return HttpResponse(response.format(req.FILES['file'].name))
+
+            # if form is valid, do something to data given
             new_file = file.objects.create(
                 file_name       = req.FILES['file'].name,
                 upload_datetime = req.POST['upload_datetime'],
                 comment         = req.POST['comment'],
             )
+
+            form = UploadFileForm()
+            context = {'form': form}
+            return render(req, 'myupload/upload_file.html', context)
+
         else:
             return HttpResponse(req.FILES['file'].name)
-            pass
 
     else:
         # if this is not a POST method, just show empty form
