@@ -15,6 +15,7 @@
 	{% if latest_files %}
 	<table>
 	    <tr>
+		<th>ID</th>
 		<th>File Name</th>
 		<th>Upload Date</th>
 		<th>Comment</th>
@@ -22,6 +23,7 @@
 	    
 	    {% for f in latest_files %}
 	    <tr>
+		<td>{{ f.id }}</td>
 		<td><a href="{% url 'myupload:detail' f.id %}">{{ f.file_name }}</a></td>
 		<td>{{ f.upload_datetime }}</td>
 		<td>{{ f.comment }}</td>

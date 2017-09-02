@@ -23,8 +23,6 @@
             <p>{{ form.file.label_tag }} {{ form.file.help_text }}</p>
 	    <p>Upload Date Time: <input type="text" name="upload_datetime" /></p>
 	    <p>Comment: <input type="text" name="comment" /></p>
-            <!-- <p>{{ form.upload_datetime.label_tag }} {{ form.upload_datetime.help_text }}</p>
-		 <p>{{ form.comment.label_tag }} {{ form.comment.help_text }}</p> -->
 
             <p>
                 {{ form.file.errors }}
@@ -32,7 +30,8 @@
             </p>
 
             <p><input type="submit" value="Upload"/></p>
-        </form>
+
+	</form>
     </body>
 
 </html>
