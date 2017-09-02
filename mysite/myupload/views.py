@@ -13,15 +13,6 @@ def index(req):
     # return HttpResponse('Hi, this is the upload page to be built.')
     template = loader.get_template('myupload/index.html')
 
-    if req.method=='POST':
-        # add new file (a new record in table myupload_file)
-        # https://docs.djangoproject.com/en/dev/ref/models/querysets/#django.db.models.query.QuerySet.create
-        new_file = file.objects.create(
-            file_name       = req.POST['file_name'],
-            upload_datetime = req.POST['upload_datetime'],
-            comment         = req.POST['comment'],
-        )
-
     number_of_files = len(file.objects.all())
     context = {
         'number_of_files': number_of_files,
@@ -32,8 +23,9 @@ def list(req):
     # response = 'There are {} records of uploads.'
     # return HttpResponse(response.format('999'))
 
-    latest_files = file.objects.order_by('-upload_datetime')[:10]
-    # output = ' & '.join([x.file_name for x in latest_files])
+    # latest_files = file.objects.order_by('-upload_datetime')[:10]
+    # latest_files = file.objects.order_by('-upload_datetime')
+    latest_files = file.objects.order_by('-id')
 
     template = loader.get_template('myupload/list.html')
 
@@ -70,19 +62,52 @@ def upload_file(req):
         # Looks like I'm creating a form populating user input...
         if form.is_valid():
 
-            # if form is valid, do something to data given
-            new_file = file.objects.create(
-                file_name       = req.FILES['file'].name,
-                upload_datetime = req.POST['upload_datetime'],
-                comment         = req.POST['comment'],
+            # # if form is valid, do something to data given
+            # new_file = file.objects.create(
+            #     file_name       = req.FILES['file'].name,
+            #     upload_datetime = req.POST['upload_datetime'],
+            #     comment         = req.POST['comment'],
+            # )
+
+            # form = UploadFileForm()
+            # context = {'form': form}
+            # return render(req, 'myupload/upload_file.html', context)
+
+            import xlsxwriter
+            import io
+            import re
+
+            # prepare excel file
+            output    = io.BytesIO()
+            workbook  = xlsxwriter.Workbook(output, {'in_memory': True})
+            worksheet = workbook.add_worksheet()
+
+            # gain data from uploaded file
+            for row_count, row in enumerate(req.FILES['file']):
+
+                # do something to it
+
+                # row is bytes. convert it to string
+                # worksheet.write( row_count, 0, row.decode() )
+
+                # also use rstrip() to remove new line at the end
+                worksheet.write( row_count, 0, row.decode().rstrip() )
+
+            workbook.close()
+            excel_data = output.getvalue()
+
+            output_file_name = re.sub('\.[a-zA-Z]+$', '.xlsx', req.FILES['file'].name)
+
+            response = HttpResponse(content_type='application/vnd.ms-excel')
+            response['Content-Disposition'] = 'attachment; filename={}'.format(
+                output_file_name
             )
+            response.write(excel_data)
 
-            form = UploadFileForm()
-            context = {'form': form}
-            return render(req, 'myupload/upload_file.html', context)
+            return response
 
-        else:
-            return HttpResponse(req.FILES['file'].name)
+        # else:
+        #     return HttpResponse(req.FILES['file'].name)
 
     else:
         # if this is not a POST method, just show empty form
