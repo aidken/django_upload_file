@@ -10,11 +10,11 @@
 	<p>
 	    <a href="{% url 'myupload:index' %}">Home</a>
 	    <a href="{% url 'myupload:list' %}">List</a>
-	    <a href="{% url 'myupload:upload_file_2' %}">Upload File 2</a>
+	    <a href="{% url 'myupload:upload_file' %}">Upload File</a>
 	</p>
 
         <!-- Upload form. Note enctype attribute! -->
-        <form action="{% url 'myupload:upload_file' %}" method="post" enctype="multipart/form-data">
+        <form action="{% url 'myupload:upload_file_2' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
 	    {% if form.non_field_errors %}
