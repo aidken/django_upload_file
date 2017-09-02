@@ -83,6 +83,19 @@ def upload_file(req):
             worksheet = workbook.add_worksheet()
 
             # gain data from uploaded file
+
+            # # obtain charset
+            # charset = req.FILES['file'].charset
+            # return HttpResponse(charset) # this returns None
+
+            # import chardet
+            # charset = chardet.detect(req.FILES['file'])
+            # return HttpResponse(charset) # error, TypeError
+
+            # import chardet
+            # charset = chardet.detect(req.FILES['file'].read())
+            # return HttpResponse(charset) # don't understand the return value
+
             for row_count, row in enumerate(req.FILES['file']):
 
                 # do something to it
@@ -90,13 +103,17 @@ def upload_file(req):
                 # row is bytes. convert it to string
                 # worksheet.write( row_count, 0, row.decode() )
 
-                # also use rstrip() to remove new line at the end
-                worksheet.write( row_count, 0, row.decode().rstrip() )
+                # # also use rstrip() to remove new line at the end
+                worksheet.write(row_count, 0, row.decode(encoding='shift-jis').rstrip())
 
             workbook.close()
             excel_data = output.getvalue()
 
-            output_file_name = re.sub('\.[a-zA-Z]+$', '.xlsx', req.FILES['file'].name)
+            output_file_name = re.sub(
+                '\.[a-zA-Z]+$',
+                '.xlsx',
+                req.FILES['file'].name
+            )
 
             response = HttpResponse(content_type='application/vnd.ms-excel')
             response['Content-Disposition'] = 'attachment; filename={}'.format(
